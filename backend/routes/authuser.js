@@ -5,8 +5,19 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const fetchuser = require('../middleware/fetchUser');
+const  nodemailer = require("nodemailer");
 
 const JWT_SECRET = 'Subuswain';
+
+// email config
+
+const transporter = nodemailer.createTransport({
+    service:"gmail",
+    auth:{
+        user:"subhashishswain3@gmail.com",
+        pass:"ovhc gfzs johh ljzj"
+    }
+})
 
 // Route - 1 -- Creating a user using : Post "api/authuser/createuser" . No log in required
 router.post('/createuser',[body('name','Enter a valid name').isLength({min: 5}),body('email','Enter a valid email').isEmail(),body('password','short password').isLength({min: 5}),body('number','Enter a valid number').isLength(10)], async(req,res)=>{
@@ -51,7 +62,7 @@ router.post('/createuser',[body('name','Enter a valid name').isLength({min: 5}),
     }
 })
 
-// Route - 2 -- Authenticate a User using: POST "api/auth/login" . No login required
+// Route - 2 -- Authenticate a User using: POST "api/authuser/login" . No login required
 
 router.post('/login',[body('email','Enter a valid email').isEmail(),body('password','password cannot be blank').exists()],async(req,res)=>{
     let success = false ;
@@ -91,11 +102,11 @@ router.post('/login',[body('email','Enter a valid email').isEmail(),body('passwo
 })
 
 
-// router - 3 -- get loggedin a User Details using: POST "api/auth/getuser" . login required
+// router - 3 -- get loggedin a User Details using: POST "api/authuser/getuser" . login required
 
 router.post('/getuser',fetchuser,async(req,res)=>{
     try{
-        userid =req.user.id;
+        let userid =req.user.id;
         const user = await User.findById(userid).select("-password");
         res.send(user);
     }
@@ -104,5 +115,129 @@ router.post('/getuser',fetchuser,async(req,res)=>{
         res.status(500).send("Internal server Error");
     }
 })
+
+// router - 4 -- password reset using: POST "api/authuser/resetpassword" . no login required
+
+router.post('/resetpassword',[body('email','Enter a valid email').isEmail()], async(req,res)=>{
+    let success = false ;
+    try{
+        const error = validationResult(req);
+        if(!error.isEmpty()){
+            return res.status(400).json({success, error: error.array()});
+        }
+        let user = await User.findOne({email: req.body.email});
+        if(!user){
+            return res.status(400).json({success,error: "please try to login with correct credentials"});
+        }
+
+        const data ={
+            user:{
+                id: user.id
+            }
+        }
+
+        const token = jwt.sign(data, JWT_SECRET,{expiresIn:"120s"});
+
+        // console.log("token", token);
+         
+        const setusertoken = await User.findByIdAndUpdate(user.id,{verifytoken:token},{new: true})
+
+        // console.log("setusertoken", setusertoken);
+
+        const email = req.body.email ;
+        if(setusertoken){
+            const mailOptions = {
+                from:"subhashishswain3@gmail.com",
+                to:email,
+                subject: "Sending email for password reset",
+                text:`This link is valid for 2  minutes http://localhost:3000/forgotpassword/${user.id}/${setusertoken.verifytoken}`
+            }
+            transporter.sendMail(mailOptions,(error,info)=>{
+               if(error){
+                   console.log("error",error);
+                   return res.status(201).json({success,error:"email not send"})
+               }
+               else{
+                   console.log("email sent",info.response);
+                    
+               }
+            })
+         }
+
+        
+        success= true ;
+        res.json({success,message:"email sent successfully"});
+
+    }
+    catch(error){
+        console.error(error.message);
+        res.status(500).send("Some error occured");
+    }
+})
+
+//Route 5 : verify an user for forgot password time: GET "api/authuser/forgotpassword" . no  login required
+router.get("/forgotpassword/:id/:token",async (req, res) => {
+    let success = false ;
+    try {
+        const { id, token } = req.params;
+
+        const validuser = await User.findOne({_id: id, verifytoken:token});
+
+        const verifytoken = jwt.verify(token,JWT_SECRET);
+
+        // console.log(validuser);
+        // console.log(verifytoken);
+
+        if(validuser && verifytoken.user.id){
+            success= true;
+            res.json({success});
+        }
+        else{
+            return res.status(400).json({success,message:"user not exist"})
+        }
+
+
+    } catch(error){
+    //   res.status(500).send("Some error occured")
+      res.json({success});
+  } 
+  });
+
+
+// change password using -- api/authuser/:id/:token
+router.post("/:id/:token",async (req, res) => {
+    let success = false ;
+    try {
+        const { id, token } = req.params;
+        const {password} = req.body;
+
+        const validuser = await User.findOne({_id: id, verifytoken:token});
+
+        const verifytoken = jwt.verify(token,JWT_SECRET);
+
+        // console.log(validuser);
+        // console.log(verifytoken);
+
+        if(validuser && verifytoken.user.id){
+            const salt = await bcrypt.genSalt(10);
+            const newpassword = await bcrypt.hash(password, salt);
+
+            const setnewuserpass = await User.findByIdAndUpdate({_id: id},{password: newpassword});
+
+            setnewuserpass.save();
+
+            success= true; 
+            res.json({success});
+        }
+        else{
+            return res.status(400).json({success,message:"user not exist"})
+        }
+
+
+    } catch(error){
+      console.error(error.message);
+      res.status(500).send({success});
+  } 
+  });
 
 module.exports = router ;

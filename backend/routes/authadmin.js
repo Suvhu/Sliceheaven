@@ -51,7 +51,7 @@ router.post('/createadmin',[body('name','Enter a valid name').isLength({min: 5})
             }
         }
 
-        const authtoken =jwt.sign(data, JWT_SECRET);
+        const authtoken =jwt.sign(data, JWT_SECRET,{expiresIn:'60s'});
         success = true ;
         res.json({success, authtoken});
     }

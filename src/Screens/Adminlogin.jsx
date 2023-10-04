@@ -21,9 +21,9 @@ const handleSubmit = async(e)=>{
   const json = await response.json();
   console.log(json); 
   if (json.success){
-    localStorage.setItem('token', json.authtoken);
+    localStorage.setItem('admintoken', json.authtoken);
     props.showAlert("logged in successfully", "success");
-    history("/");  
+    history("/admindash");  
   }
   else{
     props.showAlert("Invalid Details", "danger");

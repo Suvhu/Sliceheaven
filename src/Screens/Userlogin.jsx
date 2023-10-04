@@ -22,7 +22,7 @@ const handleSubmit = async(e)=>{
   console.log(json); 
   if (json.success){
     // save the auth token and redirect
-    localStorage.setItem('token', json.authtoken);
+    localStorage.setItem('usertoken', json.authtoken);
     props.showAlert("logged in successfully", "success");
     history("/");  
   }

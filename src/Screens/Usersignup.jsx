@@ -33,7 +33,7 @@ export default function Usersignup(props) {
             const json = await response.json();
             console.log(json);
             if(json.success){
-                localStorage.setItem("token",json.authtoken);
+                localStorage.setItem("usertoken",json.authtoken);
                 history("/");
                 props.showAlert("Account created successfully","success");
             }

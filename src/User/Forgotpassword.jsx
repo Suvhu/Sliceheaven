@@ -51,6 +51,7 @@ export default function Forgotpassword(props) {
 
   useEffect(()=>{
     userValid()
+    // eslint-disable-next-line 
   },[])
 
   return (

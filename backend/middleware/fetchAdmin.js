@@ -16,6 +16,7 @@ const fetchadmin = (req,res,next)=>{
         next();
     }
     catch(error){
+        console.log("HI")
         return res.status(401).send({success,error:"please authenticate with valid token"});
     }
 }

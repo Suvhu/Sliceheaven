@@ -1,15 +1,15 @@
 const express = require('express');
 const {body, validationResult } = require('express-validator');
 const router = express.Router();
-const fetchadmin = require('../middleware/fetchAdmin');
+const fetchadmin = require('../middleware/fetchadmin');
 const Product = require("../models/Product")
 
 
 //Route 1 : get all the products using: GET "api/admindash/fetch" . login required
 router.get("/fetch", fetchadmin, async (req, res) => {
     try {
-      const product = await Product.find();
-      res.json(product);
+      const products = await Product.find();
+      res.json(products);
     } catch(error){
       console.error(error.message);
       res.status(500).send("Some error occured")
@@ -25,22 +25,23 @@ router.post(
       body("name", "Enter a valid name").isLength({ min: 5 })
     ],
     async (req, res) => {
-      try {
-          const { category,name, number, image} = req.body;
+      let success = false;
+            try {
+          const { category,name, number, image,price} = req.body;
           const errors = validationResult(req);
       if(!errors.isEmpty()){
-          return res.status(400).json({errors: errors.array()});
+          return res.status(400).json({success,errors: errors.array()});
       }
       const product = new Product({
-        category,name, number, image
+        category,name, number, image,price
       })
       const savedProduct = await product.save();
-  
-      res.json(savedProduct);
+      success = true;
+      res.json({success,savedProduct});
   
       } catch(error){
           console.error(error.message);
-          res.status(500).send("Some error occured")
+          res.status(500).json({success,error:"Some error occured"})
       }
     }
   );
@@ -50,13 +51,13 @@ router.put(
   "/updateproduct/:id",
   fetchadmin,
   async (req, res) => {
-      const { name,number,image} = req.body;
+      const { number,image,price} = req.body;
 
       try {
       const newProduct = {};
-      if(name){newProduct.name= name};
       if(number){newProduct.number = number};
       if(image){newProduct.image =image};
+      if(price){newProduct.price =price};
 
       let product  = await Product.findById(req.params.id);
       if(!product){return res.status(404).send("Not Found")};

@@ -10,7 +10,11 @@ import Resetpassword from "./User/Resetpassword"
 import Forgotpassword from "./User/Forgotpassword"
 import Aresetpassword from "./Admin/Aresetpassword"
 import Aforgotpassword from "./Admin/Aforgotpassword"
+import Admindash from './Admin/Admindash'
+import Adminorder from './Admin/Adminorder'
+import Adminproduct from './Admin/Adminproduct'
 import Error from "./Components/Error"
+import AllState from "./Context/items/AllState";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle'
@@ -30,6 +34,7 @@ function App() {
 
   return (
     <>
+    <AllState>
    <Router>
     <Alert alert={alert}/>
     <div>
@@ -44,12 +49,14 @@ function App() {
         <Route exact path ='/adminsignup' element={<Adminsignup showAlert = {showAlert}/>}/>
         <Route exact path ='/aresetpassword' element={<Aresetpassword showAlert = {showAlert}/>}/>
         <Route exact path ='/aforgotpassword/:id/:token' element={<Aforgotpassword showAlert = {showAlert}/>}/>
-       
+        <Route exact path ='/admindash' element={<Admindash showAlert = {showAlert}/>}/>
+        <Route exact path ='/adminorder' element={<Adminorder showAlert = {showAlert}/>}/>
+        <Route exact path ='/adminproduct' element={<Adminproduct showAlert = {showAlert}/>}/>
         <Route exact path ='*' element={<Error />}/>
-        
       </Routes>
     </div>
    </Router>
+   </AllState>
    </>
   );
 }

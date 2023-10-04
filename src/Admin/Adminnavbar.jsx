@@ -16,7 +16,7 @@ export default function Adminnavbar(props) {
         style={{ backgroundColor: "#0A1828", height: "10vh" }}
       >
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/admindash">
             <img
               src={sliceheaven}
               alt="Sliceheaven"
@@ -26,8 +26,24 @@ export default function Adminnavbar(props) {
           </Link>
           <div
             className="d-flex justify-content-around "
-            style={{ width: "28%" }}
+            style={{ width: "38%" }}
           >
+            <Link
+              className="btn "
+              to="/admindash"
+              role="button"
+              style={{
+                width: "20%",
+                height: "5.3vh",
+                color: "#E4AE31",
+                fontSize: "1.3rem",
+                padding: "0",
+                fontWeight: "bold",
+              }}
+            >
+              <i className="fa-solid fa-house" style={{ color: "#178582", marginRight: "10px" }} ></i>
+              home
+            </Link>
             <Link
               className="btn "
               to="/adminproduct"

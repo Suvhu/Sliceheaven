@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Userdash() {
+export default function Userproduct() {
   return (
     <div>
-      hii user
+      hii
     </div>
   )
 }

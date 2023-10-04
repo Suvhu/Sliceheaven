@@ -79,6 +79,7 @@ export default function Pizzabase(props) {
      editref.current.click();
     setProduct2({id: currentProduct._id,enumber: currentProduct.number,eprice: currentProduct.price});
     setPizzabase(currentProduct.name);
+    setImage1(currentProduct.image)
   };
 
   const handleClick2 = (e) => {

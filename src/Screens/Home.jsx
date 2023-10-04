@@ -12,6 +12,10 @@ export default function Home() {
     if(localStorage.getItem('admintoken')){
       history("/admindash"); 
     }
+    if(localStorage.getItem('usertoken')){
+      history("/userdash"); 
+    }
+
     // eslint-disable-next-line 
   },[])
 

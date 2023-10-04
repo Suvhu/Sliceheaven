@@ -18,6 +18,7 @@ export default function Adminorder(props) {
   return (
     <div>
       <Adminnavbar showAlert = {props.showAlert}/>
+      <h1>Order Details</h1>
     </div>
   )
 }

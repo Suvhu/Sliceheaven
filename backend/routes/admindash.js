@@ -3,6 +3,7 @@ const {body, validationResult } = require('express-validator');
 const router = express.Router();
 const fetchadmin = require('../middleware/fetchadmin');
 const Product = require("../models/Product")
+const Pizza = require("../models/Pizza")
 
 
 //Route 1 : get all the products using: GET "api/admindash/fetch" . login required
@@ -90,5 +91,68 @@ router.delete(
   } 
   }
 );
+
+//Route 5 : get all the products using: GET "api/admindash/fetchpizza" . login required
+router.get("/fetchpizza", fetchadmin, async (req, res) => {
+  try {
+    const pizzas = await Pizza.find();
+    res.json(pizzas);
+  } catch(error){
+    console.error(error.message);
+    res.status(500).send("Some error occured")
+} 
+});
+
+
+//Route 6  : add a new product using: POST "api/admindash/addpizza" . login required
+router.post(
+  "/addpizza",
+  fetchadmin,
+  [
+    body("name", "Enter a valid name").isLength({ min: 5 })
+  ],
+  async (req, res) => {
+    let success = false;
+          try {
+        const { name, image,price} = req.body;
+        const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({success,errors: errors.array()});
+    }
+    const pizza = new Pizza({
+      name, image,price
+    })
+    const savedPizza = await pizza.save();
+    success = true;
+    res.json({success,savedPizza});
+
+    } catch(error){
+        console.error(error.message);
+        res.status(500).json({success,error:"Some error occured"})
+    }
+  }
+);
+
+
+
+//Route 4  : Delete an existing  product using: DELETE "api/admindash/deletepizza" . login required
+router.delete(
+"/deletepizza/:id",
+fetchadmin,
+async (req, res) => {
+    try {
+    let pizza = await Pizza.findById(req.params.id);
+    if(!pizza){return res.status(404).send("Not Found")};
+
+    
+  pizza = await Pizza.findByIdAndDelete(req.params.id);
+    res.json({"Success": "Pizza has been deleted", pizza : pizza});
+} catch(error){
+    console.error(error.message);
+    res.status(500).send("Some error occured")
+} 
+}
+);
+
 
 module.exports = router ;

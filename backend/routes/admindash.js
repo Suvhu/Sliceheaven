@@ -73,6 +73,7 @@ router.put(
   }
 );
 
+
 //Route 4  : Delete an existing  product using: DELETE "api/admindash/deleteproduct" . login required
 router.delete(
   "/deleteproduct/:id",

@@ -65,6 +65,7 @@ export default function AllState(props) {
         setProducts(newProducts);
       }
 
+      
       // Edit a product
       const updateProduct = async(id,number,image,price) =>{
         // API call

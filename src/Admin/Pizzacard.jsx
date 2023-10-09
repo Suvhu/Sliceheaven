@@ -27,5 +27,6 @@ export default function Pizzacard(props) {
         }} ></i>
         </div>
       </div>
+      
   );
 }

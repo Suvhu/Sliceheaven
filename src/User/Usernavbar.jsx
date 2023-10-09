@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useEffect, useContext} from "react";
 import sliceheaven from "../Images/Sliceheaven.png";
 import { Link } from "react-router-dom";
+import allContextuser from "../Context/items/allContextuser";
 
 export default function Usernavbar(props) {
+  const context = useContext(allContextuser);
+  const { carts, getCart, customcarts, getCustomcart} = context;
+  
   const handleLogout = () => {
     props.showAlert("Logged out successfully", "success");
     localStorage.removeItem("usertoken");
   };
+
+  const num = carts.length + customcarts.length ;
+
+  useEffect(() => {
+    if (localStorage.getItem("usertoken")) {
+      getCart();
+      getCustomcart();
+    }
+  }, []);
 
   return (
     <div>
@@ -38,10 +51,11 @@ export default function Usernavbar(props) {
                 fontSize: "1.3rem",
                 padding: "0",
                 fontWeight: "bold",
+                border: "1px solid #E4AE31",
               }}
             >
               <i
-                class="fa-solid fa-house"
+                className="fa-solid fa-house"
                 style={{ color: "#178582", marginRight: "10px" }}
               ></i>
               home
@@ -51,12 +65,13 @@ export default function Usernavbar(props) {
               to="/userorder"
               role="button"
               style={{
-                width: "25%",
+                width: "21%",
                 height: "5.3vh",
                 color: "#E4AE31",
                 fontSize: "1.3rem",
                 padding: "0",
                 fontWeight: "bold",
+                border: "1px solid #E4AE31",
               }}
             >
               <i
@@ -76,6 +91,7 @@ export default function Usernavbar(props) {
                 fontSize: "1.3rem",
                 padding: "0",
                 fontWeight: "bold",
+                border: "1px solid #E4AE31",
               }}
             >
               <i
@@ -83,18 +99,30 @@ export default function Usernavbar(props) {
                 style={{ color: "#178582", marginRight: "10px" }}
               ></i>
               cart
+              {(carts.length !== 0 || customcarts.length !== 0) ?
+                <span className="position-absolute badge rounded-pill " style={{ translate : "-10px 8px", color : "#E4AE31", fontWeight : "bold", backgroundColor : "#178582"}}>
+                {num}
+              </span> : <div></div>
+              }
             </Link>
 
-            <div class="dropdown">
+            <div
+              className="dropdown"
+              style={{
+                border: "1px solid #E4AE31",
+                padding: "0 5px",
+                borderRadius: "8px",
+              }}
+            >
               <button
-                class="dropdown-toggle"
+                className="dropdown-toggle"
                 type="button"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
                 style={{
                   width: "29%",
-                  height: "5.3vh",
+                  height: "5.2vh",
                   color: "#E4AE31",
                   fontSize: "1.3rem",
                   padding: "0",
@@ -111,13 +139,16 @@ export default function Usernavbar(props) {
                 profile
               </button>
               <ul
-                class="dropdown-menu"
+                className="dropdown-menu"
                 aria-labelledby="dropdownMenuButton1"
                 style={{ backgroundColor: "#E4AE31" }}
               >
                 <li>
-                  <Link class="dropdown-item" to="/useraccount" style={{ fontSize: "1.1rem",
-                fontWeight: "bold"}}>
+                  <Link
+                    className="dropdown-item"
+                    to="/useraccount"
+                    style={{ fontSize: "1.1rem", fontWeight: "bold" }}
+                  >
                     <i
                       className="fa-solid fa-file"
                       style={{ color: "#178582", marginRight: "10px" }}
@@ -126,8 +157,12 @@ export default function Usernavbar(props) {
                   </Link>
                 </li>
                 <li>
-                  <Link class="dropdown-item" to="/" style={{ fontSize: "1.1rem",
-                fontWeight: "bold"}} onClick={handleLogout}>
+                  <Link
+                    className="dropdown-item"
+                    to="/"
+                    style={{ fontSize: "1.1rem", fontWeight: "bold" }}
+                    onClick={handleLogout}
+                  >
                     <i
                       className="fa-solid fa-right-from-bracket"
                       style={{ color: "#178582", marginRight: "10px" }}

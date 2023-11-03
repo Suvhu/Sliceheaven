@@ -69,7 +69,7 @@ else{
         <h1 style={{ fontWeight : "bold", marginLeft:"32%", color: "#178582"}} >Total price - <b>{x}/-</b></h1>
         </div>
         <div style={{ backgroundColor: "#0A1828", paddingTop :"50px"}}>
-        <button type="button" class="btn " style={{ backgroundColor:"#E4AE31", fontWeight : "bold", fontSize : "1.5rem" , marginLeft:"43.2%", color: "#0A1828", border : "2px solid #178582" }} onClick={()=>{handleclick();}}> check out </button>
+        <button type="button" className="btn " style={{ backgroundColor:"#E4AE31", fontWeight : "bold", fontSize : "1.5rem" , marginLeft:"43.2%", color: "#0A1828", border : "2px solid #178582" }} onClick={()=>{handleclick();}}> check out </button>
         </div>
         </div>
 }

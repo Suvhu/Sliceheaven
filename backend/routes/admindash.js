@@ -4,7 +4,8 @@ const router = express.Router();
 const fetchadmin = require('../middleware/fetchadmin');
 const Product = require("../models/Product")
 const Pizza = require("../models/Pizza")
-
+const Order = require("../models/Order")
+const User = require('../models/User');
 
 //Route 1 : get all the products using: GET "api/admindash/fetch" . login required
 router.get("/fetch", fetchadmin, async (req, res) => {
@@ -153,6 +154,56 @@ async (req, res) => {
     res.status(500).send("Some error occured")
 } 
 }
+);
+
+
+
+router.get("/fetchorder", fetchadmin, async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch(error){
+    console.error(error.message);
+    res.status(500).send("Some error occured")
+} 
+});
+
+
+router.post('/getuser/:id',fetchadmin,async(req,res)=>{
+  try{
+      let userid =req.params.id;
+      const user = await User.findById(userid).select("-password");
+      res.send(user);
+  }
+  catch(error){
+      console.error(error.message);
+      res.status(500).send("Internal server Error");
+  }
+})
+
+
+router.put(
+  "/updateorder/:id",
+  fetchadmin,
+  async (req, res) => {
+      const {status} = req.body;
+
+      try {
+      const newProduct = {};
+      if(status){newProduct.status = status};
+
+      let order  = await Order.findById(req.params.id);
+      if(!order){return res.status(404).send("Not Found")};
+      
+      
+      order = await Order.findByIdAndUpdate(req.params.id, {$set: newProduct}, {new:true});
+      const orders = await Order.find();
+    res.json(orders);
+  } catch(error){
+      console.error(error.message);
+      res.status(500).send("Some error occured")
+  }
+  }
 );
 
 

@@ -162,7 +162,7 @@ router.post(
     const order = new Order({
       "name" : nami,
       "category":"normal pizza",
-      "status": "ordered",
+      "status": "Order placed",
       "price": price,
       "userid": userid
     })
@@ -192,7 +192,7 @@ router.post(
     const order = new Order({
       "name" : nami,
       "category":"custom pizza",
-      "status": "ordered",
+      "status": "Order placed",
       "price": price,
       "userid": userid
     })
@@ -207,5 +207,34 @@ router.post(
   }
 );
 
+
+router.get("/fetchorder", fetchuser, async (req, res) => {
+  try {
+    let userid =req.user.id;
+    const order = await Order.find({userid});
+    res.json(order);
+  } catch(error){
+    console.error(error.message);
+    res.status(500).send("Some error occured")
+} 
+});
+
+
+router.delete(
+  "/cancelOrder/:id",
+  fetchuser,
+  async (req, res) => {
+      try {
+      let order = await Order.findById(req.params.id);
+      if(!order){return res.status(404).send("Not Found")};
+      
+    order = await Order.findByIdAndDelete(req.params.id);
+      res.json({"Success": "Order has been cancelled successfully", order : order});
+  } catch(error){
+      console.error(error.message);
+      res.status(500).send("Some error occured")
+  } 
+  }
+);
 
 module.exports = router ;

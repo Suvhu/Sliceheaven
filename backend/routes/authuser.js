@@ -116,6 +116,7 @@ router.post('/getuser',fetchuser,async(req,res)=>{
     }
 })
 
+
 // router - 4 -- password reset using: POST "api/authuser/resetpassword" . no login required
 
 router.post('/resetpassword',[body('email','Enter a valid email').isEmail()], async(req,res)=>{
@@ -239,5 +240,36 @@ router.post("/:id/:token",async (req, res) => {
       res.status(500).send({success});
   } 
   });
+
+
+  router.put(
+    "/updateuser/:id",
+    fetchuser,
+    async (req, res) => {
+        const { name,city,town,district,number} = req.body;
+  
+        try {
+        const newUser = {};
+        if(name){newUser.name = name};
+        if(city){newUser.city =city};
+        if(town){newUser.town =town};
+        if(district){newUser.district = district};
+        if(number){newUser.number = number};
+  
+        let user  = await User.findById(req.params.id);
+        if(!user){return res.status(404).send("Not Found")};
+        
+        
+        user = await User.findByIdAndUpdate(req.params.id, {$set: newUser}, {new:true});
+        res.json(user);
+    } catch(error){
+        console.error(error.message);
+        res.status(500).send("Some error occured")
+    }
+    }
+  );
+
+
+
 
 module.exports = router ;

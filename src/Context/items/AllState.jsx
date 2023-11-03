@@ -8,6 +8,8 @@ export default function AllState(props) {
       const [pizzas, setPizzas]= useState(productsInitial);
       const [admin, setAdmin] = useState([]);
       const [success,setSuccess] = useState(false);
+      const [users, setUsers] = useState([]);
+      const[aorders,setaOrder] = useState([]);
 
       // get all products
       const getProducts = async () =>{
@@ -165,9 +167,55 @@ export default function AllState(props) {
         setPizzas(newPizzas);
       }
 
+
+      const getUsers = async (id) =>{
+        // API call
+        const response = await fetch(`${host}/api/admindash/getuser/${id}`,{
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/json',
+            'auth-token': localStorage.getItem('admintoken')
+          },
+        }); 
+        const json = await  response.json() ;
+        setUsers(json);
+      }
+
+
+      const getaOrder = async () =>{
+        // API call
+        const response = await fetch(`${host}/api/admindash/fetchorder`,{
+          method: 'GET',
+          headers: {
+            'Content-Type' : 'application/json',
+            'auth-token': localStorage.getItem('admintoken')
+          },
+        }); 
+        const json = await  response.json() ;
+        json.reverse();
+        setaOrder(json);
+      }
+
+
+      const updateOrder = async(id,status) =>{
+        // API call
+        const response = await fetch(`${host}/api/admindash/updateorder/${id}`,{
+        method: 'PUT',
+        headers: {
+          'Content-Type' : 'application/json',
+          'auth-token': localStorage.getItem('admintoken')
+        },
+        body: JSON.stringify({status})
+      });
+      const json = await response.json();
+      console.log(json);
+      json.reverse();
+      setaOrder(json);
+      }
+
   return (
     <div>
-      <allContext.Provider  value={{products, addProduct, deleteProduct, updateProduct, getProducts,admin,getAdmin,success,pizzas,addPizza,getPizza,deletePizza}}>
+      <allContext.Provider  value={{products, addProduct, deleteProduct, updateProduct, getProducts,admin,getAdmin,success,pizzas,addPizza,getPizza,deletePizza,users,getUsers,getaOrder, aorders,updateOrder}}>
             {props.children}
         </allContext.Provider>
     </div>

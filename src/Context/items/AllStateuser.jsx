@@ -2,7 +2,7 @@ import { useState } from "react";
 import allContextuser from "./allContextuser";
 
 export default function AllStateuser(props) {
-    const host ="https://sliceheaven-omega.vercel.app";
+    const host ="http://localhost:5000";
     const productsInitial = []
       const [products, setProducts]= useState(productsInitial);
     const [user, setUser] = useState([]);

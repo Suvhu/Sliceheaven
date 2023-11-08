@@ -2,7 +2,7 @@ import { useState } from "react";
 import allContext from "./allContext";
 
 export default function AllState(props) {
-    const host ="http://localhost:5000";
+    const host ="sliceheaven-b7knib5ww-suvhus-projects.vercel.app";
     const productsInitial = []
       const [products, setProducts]= useState(productsInitial);
       const [pizzas, setPizzas]= useState(productsInitial);

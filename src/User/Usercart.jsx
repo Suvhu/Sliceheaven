@@ -62,7 +62,7 @@ else{
           })}
 
           {customcarts.map((customcart) => {
-            return (<Customcartcard customcart={customcart} showAlert={props.showAlert} />) ;
+            return (<Customcartcard customcart={customcart} showAlert={props.showAlert} key={customcart._id}/>) ;
           })} 
         </div>
         <div style={{ backgroundColor: "#0A1828", paddingTop :"30px"}}>

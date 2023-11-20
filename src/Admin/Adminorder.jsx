@@ -72,7 +72,7 @@ export default function Adminorder(props) {
       </div>
       <div className="modal-body" style={{ fontWeight : "bold"}}>
       <select className="form-select" aria-label="Default select example" value={status} onChange={onChange}>
-        {(status1 === "Order Placed")? <> <option value="">{status1}</option>
+        {(status1 === "Order placed")? <> <option value="">{status1}</option>
   <option value="In the kitchen">In the kitchen</option>
   <option value="Sent to delivery">Sent to delivery</option>
   <option value="Completed">Completed</option>
@@ -81,7 +81,7 @@ export default function Adminorder(props) {
   <option value="Completed">Completed</option>
   <option value="Cancelled">Cancelled</option></> : (status1 === "Sent to delivery")? <> <option value="">{status1}</option>
   <option value="Completed">Completed</option>
-  <option value="Cancelled">Cancelled</option></> : <div></div>}
+  <option value="Cancelled">Cancelled</option></> : <> </>}
       
 </select>
       </div>

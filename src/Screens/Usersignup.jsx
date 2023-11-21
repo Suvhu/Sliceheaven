@@ -23,7 +23,7 @@ export default function Usersignup(props) {
         e.preventDefault();
         const {name,email,password,cpassword,city,town,district,pin,number} = credentials;
         if(password === cpassword){
-            const response = await fetch("http://localhost:5000/api/authuser/createuser",{
+            const response = await fetch("https://slicehesvgh.onrender.com/api/authuser/createuser",{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json",

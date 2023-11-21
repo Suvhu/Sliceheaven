@@ -2,7 +2,7 @@ import { useState } from "react";
 import allContext from "./allContext";
 
 export default function AllState(props) {
-    const host ="http://localhost:5000";
+    const host ="https://slicehesvgh.onrender.com";
     const productsInitial = []
       const [products, setProducts]= useState(productsInitial);
       const [pizzas, setPizzas]= useState(productsInitial);
